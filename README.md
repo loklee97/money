@@ -1,0 +1,2 @@
+# money
+self use

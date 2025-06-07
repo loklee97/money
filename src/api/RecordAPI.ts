@@ -159,3 +159,9 @@ export const loginapi = async (data: login): Promise<returnLogin> => {
     return res.data;
 };
 
+export const createUserapi = async (data: login): Promise<any> => {
+    const res = await api.post("/createUser", data);
+    return res.data;
+};
+
+

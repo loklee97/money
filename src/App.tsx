@@ -7,7 +7,7 @@ import CreateRecord from './Components/CreateRecord';
 import ListRecord from './Components/ListRecord';
 import Category from './Components/Category';
 import DashBoard from './Components/DashBoard';
-import { useState } from 'react';
+import AddUser from './Components/AddUser';
 import Header from './Components/Header';
 
 
@@ -19,6 +19,7 @@ function App() {
       <main className="container mx-auto px-4 mt-4">
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/adduser" element={<AddUser />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/home" element={<Home />} />
             <Route path="/createrecord" element={<CreateRecord />} />

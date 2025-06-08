@@ -2,12 +2,14 @@ import axios from "axios";
 import { deleteRecordBody } from "../Components/Enum";
 
 // 设定 baseURL，方便之后统一管理
+const live ="https://moneyapi-lj06.onrender.com/api"
+const local ="http://localhost:3001/api"
 const api = axios.create({
-    baseURL: "http://localhost:3001/api", // 改成你后端实际地址
+    baseURL: live, // 改成你后端实际地址
     headers: {
         "Content-Type": "application/json",
     },
-});
+}); 
 
 export interface getRecord {
     calculation: number;

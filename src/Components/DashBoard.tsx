@@ -5,12 +5,7 @@ import { fetchAllRecordsapi, getRecord,  } from '../api/RecordAPI';
 import { useAuth } from './AuthContext';
 import { expenseCategoryItem, pieData } from './Enum';
 
-const data = [
-    { name: 'Food', value: 400 },
-    { name: 'Rent', value: 300 },
-    { name: 'Transport', value: 200 },
-    { name: 'Utilities', value: 100 },
-];
+
 
 function getRandomColor(): string {
   return '#' + Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0');
@@ -130,7 +125,7 @@ const PieChartCard = () => {
                            label={({ percent }) => `${(percent * 100).toFixed(2)}%`}
 
                         >
-                            {data.map((entry, index) => (
+                            {filterData.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={getRandomColor()} />
                             ))}
                         </Pie>

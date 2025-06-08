@@ -1,8 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import CreateRecord from '../Components/CreateRecord.tsx';
-import ListRecord from '../Components/ListRecord.tsx';
-import Category  from '../Components/Category.tsx';
-import Login  from '../Components/Login.tsx';
+import moneyIn from '../assets/moneyin.png';
+import moneyOut from '../assets/moneyout.png';
+import category from '../assets/category.png';
+import record from '../assets/record.png';
+import dashboard from '../assets/dashboard.png';
 interface CardItem {
   id: number;
   title: string;
@@ -11,12 +12,12 @@ interface CardItem {
 }
 
 const mainmenu: CardItem[] = [
-  { id: 1, title: 'Money-In', imageUrl: '../assets/moneyin.png', path: '/createrecord?cal=income' },
-  { id: 2, title: 'Money-Out', imageUrl: '../assets/moneyout.png', path: '/createrecord?cal=expenses' },
-  { id: 3, title: 'Category', imageUrl: '../assets/category.png', path: '/category' },
-  { id: 4, title: 'Record', imageUrl: '../assets/record.png', path: '/listrecord' },
-  { id: 5, title: 'DashBoard', imageUrl: '../assets/dashboard.png', path: '/dashboard' }
-]
+  { id: 1, title: 'Money-In', imageUrl: moneyIn, path: '/createrecord?cal=income' },
+  { id: 2, title: 'Money-Out', imageUrl: moneyOut, path: '/createrecord?cal=expenses' },
+  { id: 3, title: 'Category', imageUrl: category, path: '/category' },
+  { id: 4, title: 'Record', imageUrl: record, path: '/listrecord' },
+  { id: 5, title: 'DashBoard', imageUrl: dashboard, path: '/dashboard' }
+];
 
 const CardGrid: React.FC<{ items: CardItem[] }> = ({ items }) => {
   return (

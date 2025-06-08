@@ -11,11 +11,11 @@ interface CardItem {
 }
 
 const mainmenu: CardItem[] = [
-  { id: 1, title: 'Money-In', imageUrl: '../src/assets/moneyin.png', path: '/createrecord?cal=income' },
-  { id: 2, title: 'Money-Out', imageUrl: '../src/assets/moneyout.png', path: '/createrecord?cal=expenses' },
-  { id: 3, title: 'Category', imageUrl: '../src/assets/category.png', path: '/category' },
-  { id: 4, title: 'Record', imageUrl: '../src/assets/record.png', path: '/listrecord' },
-  { id: 5, title: 'DashBoard', imageUrl: '../src/assets/dashboard.png', path: '/dashboard' }
+  { id: 1, title: 'Money-In', imageUrl: '../assets/moneyin.png', path: '/createrecord?cal=income' },
+  { id: 2, title: 'Money-Out', imageUrl: '../assets/moneyout.png', path: '/createrecord?cal=expenses' },
+  { id: 3, title: 'Category', imageUrl: '../assets/category.png', path: '/category' },
+  { id: 4, title: 'Record', imageUrl: '../assets/record.png', path: '/listrecord' },
+  { id: 5, title: 'DashBoard', imageUrl: '../assets/dashboard.png', path: '/dashboard' }
 ]
 
 const CardGrid: React.FC<{ items: CardItem[] }> = ({ items }) => {

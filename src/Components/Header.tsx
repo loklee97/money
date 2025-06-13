@@ -5,10 +5,15 @@ import { useState } from 'react';
 import logoImage from '../assets/download.png';
 import { recalculateapi, returnLogin} from '../api/RecordAPI.ts'
 export default function Header({ }) {
-    const { money, user, logout } = useAuth();
+    const { money, user, logout,resetMoney } = useAuth();
     const [showMoney, setShowMoney] = useState(true);
     const navigate = useNavigate();
-  
+    const handleRecalculate =async () =>{
+       const newMoney =  await recalculateapi(user!)
+       console.log('new money : ',newMoney)
+        resetMoney( newMoney)
+    }
+    
     return (
         <header className="flex items-center justify-between px-6 py-3 bg-gray-800 text-white shadow-md">
             <div className="flex items-center gap-2  hover:opacity-80 " onClick={() => navigate('/home')}>
@@ -21,7 +26,7 @@ export default function Header({ }) {
             </div>
 
             <div className="flex items-center gap-4">
-                   <button onClick={() => recalculateapi(user!)} className="text-sm cursor-pointer">
+                   <button onClick={() => handleRecalculate()} className="text-sm cursor-pointer">
                     Recalculate
                 </button>
                 <button onClick={() => setShowMoney(!showMoney)} className="text-sm cursor-pointer">

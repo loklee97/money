@@ -100,7 +100,7 @@ export async function deleteRecordWithChild(id: string, createdDate: string, rec
             id: child.id,
             createdDate: child.createdDate,
             userName : userName,
-            amount : child.amount,
+           amount : child.amount * child.calculation,
         })
     )
     console.log(data)

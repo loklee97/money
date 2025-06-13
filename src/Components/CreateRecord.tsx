@@ -3,6 +3,7 @@ import { expenseCategoryItem as expensesCategoryItem, expenseCategory } from './
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { createRecord, createRecordapi, getRecord, fetchAllRecordsapi, updateRecordapi, updateRecord, deleteRecordWithChild } from '../api/RecordAPI.ts'
 import { useAuth } from '../Components/AuthContext.tsx';
+import LoadingPage from "./Loading.tsx";
 
 export default function Moneyin() {
   const navigate = useNavigate();
@@ -13,7 +14,6 @@ export default function Moneyin() {
   const calculation = searchParams.get("cal");
   const id = searchParams.get("id");
   const [category, setCategory] = useState<expenseCategory[]>([]);
-
   function resetData() {
     setName("");
     setAmount("");
@@ -73,11 +73,12 @@ export default function Moneyin() {
       amount: Number(amount),
       calculation: Number(cal),
       parentId: parentId,
-      userName :user!
+      userName: user!
     };
     try {
       const res = await createRecordapi(newRecord);
-      alert("Record added: " + res.name);
+      alert("Record added: " + name);
+      navigate(`/listrecord`);
       resetData();
     } catch (error) {
       console.error("Failed to add expense", error);
@@ -107,35 +108,33 @@ export default function Moneyin() {
           parentId: parentId,
           id: detail.id!!,
           createdDate: detail.createdDate,
-          userName:user!
+          userName: user!
         };
         try {
           const res = await updateRecordapi(newRecord);
-          alert("Record added: " + res);
+          alert("Record added: " + name);
           resetData();
         } catch (error) {
-          console.error("Failed to add expense", error);
-          alert("Failed to add expense");
+          console.error("Failed to add record", error);
+          alert("Failed to add record");
         }
       }
     }
     resetData();
     setisEdit(!isEdit);
-
   }
-
   const deleteButtonClick = async (isEdit: Boolean) => {
     if (isEdit) {
       if (!id || records.length === 0) return;
       const detail = records.find(x => x.id == id)
       if (detail) {
         try {
-          const res = await deleteRecordWithChild(detail.id, detail.createdDate, records,user!);
-          alert("Record deleted: " + res);
+          const res = await deleteRecordWithChild(detail.id, detail.createdDate, records, user!);
+          alert("Record deleted: " + detail.name);
           resetData();
         } catch (error) {
-          console.error("Failed to delete expense", error);
-          alert("Failed to delete expense");
+          console.error("Failed to delete record", error);
+          alert("Failed to delete record");
         }
       }
       const cal = (detail?.calculation === 1 ? 'income' : 'expenses')
@@ -146,14 +145,12 @@ export default function Moneyin() {
       setisEdit(isEdit => !isEdit);
     }
     resetData();
-
-
   }
   return (
 
     <form onSubmit={handleSubmit} className="max-w-xl mx-auto p-4 space-y-4">
       <div>
-        <label className="block text-xl font-medium text-gray-700">{calculation!.toLocaleUpperCase()}{calculation === 'income'? '(+)':'(-)'}</label>
+        <label className="block text-xl font-medium text-gray-700">{calculation!.toLocaleUpperCase()}{calculation === 'income' ? '(+)' : '(-)'}</label>
         <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category:</label>
         <select
           id="categorySelect"

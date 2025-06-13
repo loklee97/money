@@ -22,12 +22,12 @@ const [money, setMoney] = useState<number>(() => {
   const login = (username: string,money : number) => {
     setUser(username);
     setMoney(money);
-    localStorage.setItem('user', username);
+    localStorage.setItem('user', username);//save data in cache
     localStorage.setItem('money', money.toString());
   };
 
   const logout = () => {
-    setUser('');
+    setUser('');//clear cache and user
     localStorage.removeItem('user');
   };
 

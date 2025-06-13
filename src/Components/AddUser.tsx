@@ -11,7 +11,7 @@ const AddUser = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
+    //validation empty
     if (!userName || !password) {
       setError('Please enter both email and password.');
       return;

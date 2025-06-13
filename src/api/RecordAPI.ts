@@ -167,4 +167,12 @@ export const createUserapi = async (data: login): Promise<any> => {
     return res.data;
 };
 
+export const recalculateapi = async (userName: string): Promise<any> => {
+    console.log('recalculate par :',{userName}  )
+    const res = await api.post("/calculateTotal", {userName});
+    console.log(res)
+    return res.data;
+};
+
+
 

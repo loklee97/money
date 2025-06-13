@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+
 import moneyIn from '../assets/moneyin.png';
 import moneyOut from '../assets/moneyout.png';
 import category from '../assets/category.png';
@@ -18,7 +19,6 @@ const mainmenu: CardItem[] = [
   { id: 4, title: 'Record', imageUrl: record, path: '/listrecord' },
   { id: 5, title: 'DashBoard', imageUrl: dashboard, path: '/dashboard' }
 ];
-
 const CardGrid: React.FC<{ items: CardItem[] }> = ({ items }) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">

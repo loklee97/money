@@ -4,6 +4,7 @@ import { expenseCategoryItem, recordListColumn } from '../Components/Enum.ts'
 import { useNavigate } from 'react-router-dom';
 import { parse } from 'date-fns';
 import { useAuth } from '../Components/AuthContext.tsx';
+import { searchFilter, sortByValue, toggleSort } from "./Utils.ts";
 
 export default function TreeList() {
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
@@ -16,6 +17,7 @@ export default function TreeList() {
   const [error, setError] = useState<string | null>(null);
   const [refresh, setRefresh] = useState(true);
 
+  //get data from api and add balanced 
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -42,6 +44,7 @@ export default function TreeList() {
     fetchData();
   }, [refresh]);
 
+  //right click dropdown menu function for details and delete
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ x: 0, y: 0 });
   const [selectedRecord, setSelectedRecord] = useState<getRecord | null>(null);
@@ -103,72 +106,31 @@ export default function TreeList() {
     );
   };
 
-  const [sortBy, setSortBy] = useState<keyof getRecordList>('createdDate');
-  const [sortAsc, setSortAsc] = useState<boolean>(true);
+//sort funct 
+const [sortBy, setSortBy] = useState<keyof getRecordList>('createdDate');
+const [sortAsc, setSortAsc] = useState(true);
+const [search, setSearch] = useState('');
 
-  const [search, setSearch] = useState<string>('');
+const filteredData = searchFilter(recordtree, search, ['name', 'categoryCode'], (item, key, value, search) => {
+  if (key === 'categoryCode') {
+    const category = expenseCategoryItem.find(x => x.categoryCode === value)?.category;
+    return category?.toLowerCase().includes(search.toLowerCase()) ?? false;
+  }
+  return value?.toString().toLowerCase().includes(search.toLowerCase());
+});
 
-const sortedData = React.useMemo(() => {
-  return [...recordtree].filter((item, index) => {
-    const matchedField = recordListColumn.find((field) => {
-      const key = field as keyof getRecordList;
-      const value = item[key];
-      if (key === 'categoryCode') {
-        const cat = expenseCategoryItem.find(x => x.categoryCode === value)?.category;
-        const matched = cat != null &&
-          cat.toString().toLowerCase().includes(search.toLowerCase());
-        return matched
-      }
-      const matched =
-        value != null &&
-        value.toString().toLowerCase().includes(search.toLowerCase());
+const sortedData = [...filteredData].sort((a, b) => sortByValue(a, b, sortBy, sortAsc));
 
-      if (!matched) return false;
-
-      console.log(
-        `✅ Match found at index ${index} on field "${field}":`,
-        value
-      );
-      return true;
-    });
-
-    if (!matchedField) {
-      console.log(`❌ No match for item at index ${index}`, item);
-    }
-
-    return !!matchedField;
-  }).sort((a, b) => {
-    const valA = a[sortBy];
-    const valB = b[sortBy];
-    if (sortBy === 'createdDate' && typeof valA === 'string' && typeof valB === 'string') {
-      // Parse strings to Date objects
-      const dateA = parse(valA, 'dd-MM-yyyy HH:mm', new Date());
-      const dateB = parse(valB, 'dd-MM-yyyy HH:mm', new Date());
-
-      return !sortAsc ? dateA.getTime() - dateB.getTime() : dateB.getTime() - dateA.getTime();
-    }
-
-    if (typeof valA === 'number' && typeof valB === 'number') {
-      return sortAsc ? valA - valB : valB - valA;
-    }
-    return sortAsc
-      ? String(valA).localeCompare(String(valB))
-      : String(valB).localeCompare(String(valA));
-  });}, [recordtree, search, sortBy, sortAsc, expenseCategoryItem]);
-
-  const toggleSort = (column: keyof getRecordList) => {
-    if (sortBy === column) {
-      setSortAsc(!sortAsc); // reverse sort
-    } else {
-      setSortBy(column);
-      setSortAsc(true); // default to ascending
-    }
-  };
+const onToggleSort = (column: keyof getRecordList) => {
+  const result = toggleSort(sortBy, sortAsc, column);
+  setSortBy(result.sortBy);
+  setSortAsc(result.sortAsc);
+};
 
   const handleDelete = (id: string, createdDate: string, records: getRecord[]) => {
     deleteRecordWithChild(id, createdDate, records,user!);
     setRefresh(!refresh);
-  }
+  } 
 
 
   return (
@@ -187,12 +149,12 @@ const sortedData = React.useMemo(() => {
         <div className="w-full border border-gray-300 rounded overflow-hidden">
           {/* Header row */}
           <div className="grid grid-cols-6 bg-gray-100 text-left text-sm font-medium border-b">
-            <div className="px-4 py-2 border-r" onClick={() => toggleSort('createdDate')}>Date{sortBy === 'createdDate' && (sortAsc ? ' ▼' : ' ▲')}</div>
-            <div className="px-4 py-2 border-r" onClick={() => toggleSort('name')}>Name{sortBy === 'name' && (sortAsc ? ' ▼' : ' ▲')}</div>
-            <div className="px-4 py-2 border-r" onClick={() => toggleSort('description')}>Description{sortBy === 'description' && (sortAsc ? ' ▼' : ' ▲')}</div>
-            <div className="px-4 py-2 border-r" onClick={() => toggleSort('categoryCode')}>Category{sortBy === 'categoryCode' && (sortAsc ? ' ▼' : ' ▲')}</div>
-            <div className="px-4 py-2 border-r" onClick={() => toggleSort('amount')}>Amount{sortBy === 'amount' && (sortAsc ? ' ▼' : ' ▲')}</div>
-            <div className="px-4 py-2 border-r" onClick={() => toggleSort('balanced')}>Balanced{sortBy === 'balanced' && (sortAsc ? ' ▼' : ' ▲')}</div>
+            <div className="px-4 py-2 border-r" onClick={() => onToggleSort('createdDate')}>Date{sortBy === 'createdDate' && (sortAsc ? ' ▼' : ' ▲')}</div>
+            <div className="px-4 py-2 border-r" onClick={() => onToggleSort('name')}>Name{sortBy === 'name' && (sortAsc ? ' ▼' : ' ▲')}</div>
+            <div className="px-4 py-2 border-r" onClick={() => onToggleSort('description')}>Description{sortBy === 'description' && (sortAsc ? ' ▼' : ' ▲')}</div>
+            <div className="px-4 py-2 border-r" onClick={() => onToggleSort('categoryCode')}>Category{sortBy === 'categoryCode' && (sortAsc ? ' ▼' : ' ▲')}</div>
+            <div className="px-4 py-2 border-r" onClick={() => onToggleSort('amount')}>Amount{sortBy === 'amount' && (sortAsc ? ' ▼' : ' ▲')}</div>
+            <div className="px-4 py-2 border-r" onClick={() => onToggleSort('balanced')}>Balanced{sortBy === 'balanced' && (sortAsc ? ' ▼' : ' ▲')}</div>
           </div>
 
           {/* Data rows */}

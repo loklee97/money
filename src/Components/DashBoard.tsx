@@ -16,17 +16,12 @@ const PieChartCard = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-
-
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const data = await fetchAllRecordsapi(user!);
                 console.log("✅ Fetched data:", data);
                 setRecords(data);
-
-
-
             } catch (err: any) {
                 setError(err.message);
             } finally {

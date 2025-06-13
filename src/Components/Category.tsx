@@ -1,38 +1,26 @@
 
 import React, { useState } from "react";
 import { expenseCategoryItem, expenseCategory } from '../Components/Enum.ts'
+import { sortByValue, toggleSort } from "./Utils.ts";
 
 export default function categoryList() {
+    //const a new categorylist
     const categoryFilterList = expenseCategoryItem;
-    const [sortBy, setSortBy] = useState<keyof expenseCategory>('categoryCode');
-    const [sortAsc, setSortAsc] = useState<boolean>(true);
-
-    const [search, setSearch] = useState<string>('');
+    const [sortBy, setSortBy] = useState<keyof expenseCategory>('categoryCode'); // default sort by category code
+    const [sortAsc, setSortAsc] = useState(true);
+    const [search, setSearch] = useState('');
 
     const sortedData = [...categoryFilterList].filter((item) =>
         Object.values(item).some((value) =>
             value.toString().toLowerCase().includes(search.toLowerCase())
         )
-    ).sort((a, b) => {
-        const valA = a[sortBy];
-        const valB = b[sortBy];
-        if (typeof valA === 'number' && typeof valB === 'number') {
-            return sortAsc ? valA - valB : valB - valA;
-        }
-        return sortAsc
-            ? String(valA).localeCompare(String(valB))
-            : String(valB).localeCompare(String(valA));
-    });
+    ).sort((a, b) => sortByValue(a, b, sortBy, sortAsc));//sorted data as list data usestate will recall this
 
-    const toggleSort = (column: keyof expenseCategory) => {
-        if (sortBy === column) {
-            setSortAsc(!sortAsc); // reverse sort
-        } else {
-            setSortBy(column);
-            setSortAsc(true); // default to ascending
-        }
+    const onToggleSort = (column: keyof expenseCategory) => {
+        const result = toggleSort(sortBy, sortAsc, column);
+        setSortBy(result.sortBy);
+        setSortAsc(result.sortAsc);
     };
-
 
 
     return (
@@ -45,15 +33,15 @@ export default function categoryList() {
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                 />
-              
+
             </div>
             <div className="overflow-x-auto p-4">
                 <div className="w-full border border-gray-300 rounded overflow-hidden">
                     {/* Header row */}
                     <div className="grid grid-cols-3 bg-gray-100 text-left text-sm font-medium border-b">
-                        <div className="px-4 py-2 border-r" onClick={() => toggleSort('categoryCode')}>Category Code{sortBy === 'categoryCode' && (sortAsc ? ' ▼' : ' ▲')}</div>
-                        <div className="px-4 py-2 border-r" onClick={() => toggleSort('category')}>  Name  {sortBy === 'category' && (sortAsc ? ' ▼' : ' ▲')}</div>
-                        <div className="px-4 py-2 border-r" onClick={() => toggleSort('calculation')}>Calculation{sortBy === 'calculation' && (sortAsc ? ' ▼' : ' ▲')}</div>
+                        <div className="px-4 py-2 border-r" onClick={() => onToggleSort('categoryCode')}>Category Code{sortBy === 'categoryCode' && (sortAsc ? ' ▼' : ' ▲')}</div>
+                        <div className="px-4 py-2 border-r" onClick={() => onToggleSort('category')}>  Name  {sortBy === 'category' && (sortAsc ? ' ▼' : ' ▲')}</div>
+                        <div className="px-4 py-2 border-r" onClick={() => onToggleSort('calculation')}>Calculation{sortBy === 'calculation' && (sortAsc ? ' ▼' : ' ▲')}</div>
                     </div>
 
                     {

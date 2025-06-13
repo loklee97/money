@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { useState } from 'react';
 import logoImage from '../assets/download.png';
+import { recalculateapi, returnLogin} from '../api/RecordAPI.ts'
 export default function Header({ }) {
     const { money, user, logout } = useAuth();
     const [showMoney, setShowMoney] = useState(true);
     const navigate = useNavigate();
+  
     return (
         <header className="flex items-center justify-between px-6 py-3 bg-gray-800 text-white shadow-md">
             <div className="flex items-center gap-2  hover:opacity-80 " onClick={() => navigate('/home')}>
@@ -19,6 +21,9 @@ export default function Header({ }) {
             </div>
 
             <div className="flex items-center gap-4">
+                   <button onClick={() => recalculateapi(user!)} className="text-sm cursor-pointer">
+                    Recalculate
+                </button>
                 <button onClick={() => setShowMoney(!showMoney)} className="text-sm cursor-pointer">
                     {showMoney ? "👁️" : "🙈"}
                 </button>

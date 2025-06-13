@@ -139,6 +139,7 @@ export default function Moneyin() {
     if (isEdit) {
       if (!id || records.length === 0) return;
       const detail = records.find(x => x.id == id)
+      const cal = (detail?.calculation === 1 ? 'income' : 'expenses')
       if (detail) {
         try {
           const res = await deleteRecordWithChild(detail.id, detail.createdDate, records, user!);
@@ -147,12 +148,13 @@ export default function Moneyin() {
           console.log('brand new moeny :',money)
           resetData();
           alert("Record deleted: " + detail.name);
+          navigate(`/createrecord?cal=${cal}`);
         } catch (error) {
           console.error("Failed to delete record", error);
           alert("Failed to delete record");
         }
       }
-      const cal = (detail?.calculation === 1 ? 'income' : 'expenses')
+   
 
 
       navigate(`/createrecord?cal=${cal}`);

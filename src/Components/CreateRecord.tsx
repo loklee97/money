@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { expenseCategoryItem as expensesCategoryItem, expenseCategory } from './Enum.ts'
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { createRecord, createRecordapi, getRecord, fetchAllRecordsapi, updateRecordapi, updateRecord, deleteRecordWithChild } from '../api/RecordAPI.ts'
+import { createRecord, createRecordapi, getRecord, fetchAllRecordsapi, updateRecordapi, updateRecord, deleteRecordWithChild, getmoneyapi } from '../api/RecordAPI.ts'
 import { useAuth } from '../Components/AuthContext.tsx';
 import LoadingPage from "./Loading.tsx";
 
 export default function Moneyin() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, money, resetMoney } = useAuth();
   const [_, setSelected] = useState<expenseCategory | null>(null);
   const [categoryCode, setCategoryCode] = useState<string>("");
   const [searchParams] = useSearchParams();
@@ -37,14 +37,6 @@ export default function Moneyin() {
       setIsDisable(!isEdit);
     }
   }
-  useEffect(() => {
-    const filteredCategory = expensesCategoryItem.filter((item) => {
-      if (calculation === "income") return item.calculation === 1;
-      if (calculation === "expenses") return item.calculation === -1;
-    });
-    setSelected(null)
-    setCategory(filteredCategory);
-  }, [calculation]);
 
   const [records, setRecords] = useState<getRecord[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,6 +69,8 @@ export default function Moneyin() {
     };
     try {
       const res = await createRecordapi(newRecord);
+      const newMoney = await getmoneyapi(user!);
+      resetMoney(newMoney)
       alert("Record added: " + name);
       navigate(`/listrecord`);
       resetData();
@@ -89,10 +83,25 @@ export default function Moneyin() {
   const [isDisable, setIsDisable] = useState(false);
   const [isEdit, setisEdit] = useState(false);
   useEffect(() => {
-    regetData();
+    const filteredCategory = expensesCategoryItem.filter((item) => {
+      if (calculation === "income") return item.calculation === 1;
+      if (calculation === "expenses") return item.calculation === -1;
+    });
+    setSelected(null)
+    setCategory(filteredCategory);
+    if (id) {
+      regetData();
+      if (id) {
+        const category = filteredCategory.find(x => x.categoryCode === categoryCode)
+        if (category) {
+          setSelected(category)
+        }
+      }
+    }
+
     console.log(isEdit)
 
-  }, [id, records, isEdit]);
+  }, [id, records, isEdit, calculation]);
 
   const editButtonClick = async (isEdit: Boolean) => {
     if (isEdit) {
@@ -112,11 +121,14 @@ export default function Moneyin() {
         };
         try {
           const res = await updateRecordapi(newRecord);
-          alert("Record added: " + name);
+          console.log('res ::',res)
+          const newMoney = await getmoneyapi(user!);
+          resetMoney(newMoney)
+          alert("Record update: " + name);
           resetData();
         } catch (error) {
-          console.error("Failed to add record", error);
-          alert("Failed to add record");
+          console.error("Failed to update record", error);
+          alert("Failed to update record");
         }
       }
     }
@@ -130,8 +142,11 @@ export default function Moneyin() {
       if (detail) {
         try {
           const res = await deleteRecordWithChild(detail.id, detail.createdDate, records, user!);
-          alert("Record deleted: " + detail.name);
+          const newMoney = await getmoneyapi(user!);
+          resetMoney(newMoney)
+          console.log('brand new moeny :',money)
           resetData();
+          alert("Record deleted: " + detail.name);
         } catch (error) {
           console.error("Failed to delete record", error);
           alert("Failed to delete record");
@@ -150,7 +165,7 @@ export default function Moneyin() {
 
     <form onSubmit={handleSubmit} className="max-w-xl mx-auto p-4 space-y-4">
       <div>
-        <label className="block text-xl font-medium text-gray-700">{calculation!.toLocaleUpperCase()}{calculation === 'income' ? '(+)' : '(-)'}</label>
+        <label className="block text-xl font-medium text-gray-700">{calculation === 'income' ? '(+)' : '(-)'}</label>
         <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category:</label>
         <select
           id="categorySelect"

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { deleteRecordWithChild, fetchAllRecordsapi, getRecord, getRecordList, recordTree } from '../api/RecordAPI.ts'
+import { deleteRecordWithChild, fetchAllRecordsapi, getmoneyapi, getRecord, getRecordList, recordTree } from '../api/RecordAPI.ts'
 import { expenseCategoryItem, recordListColumn } from '../Components/Enum.ts'
 import { useNavigate } from 'react-router-dom';
 import { parse } from 'date-fns';
@@ -8,7 +8,7 @@ import { searchFilter, sortByValue, toggleSort } from "./Utils.ts";
 
 export default function TreeList() {
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
-  const { user } = useAuth();
+  const { user,  resetMoney } = useAuth();
 
   const navigate = useNavigate();
   const [records, setRecords] = useState<getRecord[]>([]);
@@ -106,31 +106,33 @@ export default function TreeList() {
     );
   };
 
-//sort funct 
-const [sortBy, setSortBy] = useState<keyof getRecordList>('createdDate');
-const [sortAsc, setSortAsc] = useState(true);
-const [search, setSearch] = useState('');
+  //sort funct 
+  const [sortBy, setSortBy] = useState<keyof getRecordList>('createdDate');
+  const [sortAsc, setSortAsc] = useState(true);
+  const [search, setSearch] = useState('');
 
-const filteredData = searchFilter(recordtree, search, ['name', 'categoryCode'], (item, key, value, search) => {
-  if (key === 'categoryCode') {
-    const category = expenseCategoryItem.find(x => x.categoryCode === value)?.category;
-    return category?.toLowerCase().includes(search.toLowerCase()) ?? false;
+  const filteredData = searchFilter(recordtree, search, ['name', 'categoryCode'], (item, key, value, search) => {
+    if (key === 'categoryCode') {
+      const category = expenseCategoryItem.find(x => x.categoryCode === value)?.category;
+      return category?.toLowerCase().includes(search.toLowerCase()) ?? false;
+    }
+    return value?.toString().toLowerCase().includes(search.toLowerCase());
+  });
+
+  const sortedData = [...filteredData].sort((a, b) => sortByValue(a, b, sortBy, sortAsc));
+
+  const onToggleSort = (column: keyof getRecordList) => {
+    const result = toggleSort(sortBy, sortAsc, column);
+    setSortBy(result.sortBy);
+    setSortAsc(result.sortAsc);
+  };
+
+  const handleDelete = async (id: string, createdDate: string, records: getRecord[]) => {
+    await deleteRecordWithChild(id, createdDate, records, user!);
+    setRefresh(prev => !prev);
+    const newMoney = await getmoneyapi(user!);
+    resetMoney(newMoney)
   }
-  return value?.toString().toLowerCase().includes(search.toLowerCase());
-});
-
-const sortedData = [...filteredData].sort((a, b) => sortByValue(a, b, sortBy, sortAsc));
-
-const onToggleSort = (column: keyof getRecordList) => {
-  const result = toggleSort(sortBy, sortAsc, column);
-  setSortBy(result.sortBy);
-  setSortAsc(result.sortAsc);
-};
-
-  const handleDelete = (id: string, createdDate: string, records: getRecord[]) => {
-    deleteRecordWithChild(id, createdDate, records,user!);
-    setRefresh(!refresh);
-  } 
 
 
   return (
@@ -165,7 +167,7 @@ const onToggleSort = (column: keyof getRecordList) => {
                 onMouseDown={(e) => handleMouseDown(e, record)}
                 onMouseUp={(e) => handleMouseUp(e, record)}
               >
-                <div className="px-4 py-2 border-r">{record.createdDate} {!expandedIds.includes(record.id) && record.children.length > 0 && "▸"}{expandedIds.includes(record.id) && record.children.length > 0&&'▼'}</div>
+                <div className="px-4 py-2 border-r">{record.createdDate} {!expandedIds.includes(record.id) && record.children.length > 0 && "▸"}{expandedIds.includes(record.id) && record.children.length > 0 && '▼'}</div>
                 <div className="px-4 py-2 border-r">{record.name} </div>
                 <div className="px-4 py-2 border-r">{record.description}</div>
                 <div className="px-4 py-2 border-r">
@@ -176,7 +178,7 @@ const onToggleSort = (column: keyof getRecordList) => {
                 </div>
                 <div className="px-4 py-2">
                   {record.children.length > 0 && record.balanced ? record.balanced : ''}
-                      {record.balanced}
+                  {record.balanced}
                 </div>
               </div>
 
@@ -226,3 +228,7 @@ const onToggleSort = (column: keyof getRecordList) => {
 
   );
 }
+function resetMoney(newMoney: number) {
+  throw new Error("Function not implemented.");
+}
+

@@ -90,7 +90,7 @@ export interface returnLogin {
     money:number;
 }
 
-export function deleteRecordWithChild(id: string, createdDate: string, records: getRecord[],userName :string) {
+export async function deleteRecordWithChild(id: string, createdDate: string, records: getRecord[],userName :string) {
     const data: deleteRecordBody[] = [];
     console.log("id:" + id)
     console.log("createdDate:" + createdDate)
@@ -100,11 +100,12 @@ export function deleteRecordWithChild(id: string, createdDate: string, records: 
             id: child.id,
             createdDate: child.createdDate,
             userName : userName,
-            amount : child.amount * child.calculation,
+            amount : child.amount,
         })
     )
     console.log(data)
-    deleteRecordapi(data);
+    
+    return deleteRecordapi(data);;
     
 }
 
@@ -147,12 +148,12 @@ export const createRecordapi = async (data: createRecord): Promise<createRecord>
 };
 
 
-export const deleteRecordapi = async (data: deleteRecordBody[]): Promise<string> => {
+export const deleteRecordapi = async (data: deleteRecordBody[]): Promise<{message: string}> => {
     const res = await api.post("/deleteRecord", data);
     return res.data;
 };
 
-export const updateRecordapi = async (data: updateRecord): Promise<string> => {
+export const updateRecordapi = async (data: updateRecord): Promise<{message: string}> => {
     const res = await api.post("/updateRecord", data);
     return res.data;
 };
@@ -174,5 +175,12 @@ export const recalculateapi = async (userName: string): Promise<number> => {
     return res.data;
 };
 
+
+export const getmoneyapi = async (userName: string): Promise<number> => {
+    console.log('get money par :',{userName}  )
+    const res = await api.get("/getMoneyByUser?userName="+userName);
+    console.log(res)
+    return res.data;
+};
 
 

@@ -167,7 +167,7 @@ export default function Moneyin() {
 
     <form onSubmit={handleSubmit} className="max-w-xl mx-auto p-4 space-y-4">
       <div>
-        <label className="block text-xl font-medium text-gray-700">{calculation === 'income' ? '(+)' : '(-)'}</label>
+        <label className="block text-xl font-medium text-gray-700">{calculation === 'income' ? 'Income (+)' : 'Expenses (-)'}</label>
         <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category:</label>
         <select
           id="categorySelect"

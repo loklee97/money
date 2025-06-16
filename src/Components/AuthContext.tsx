@@ -32,7 +32,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
   const logout = () => {
     setUser('');//clear cache and user
+    setMoney(0);
     localStorage.removeItem('user');
+    localStorage.removeItem('money');
   };
 
   return (

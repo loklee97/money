@@ -12,7 +12,8 @@ Important before using
 - It also can contra if you borrow money to ppl then he pay back to you by using parent record. So it has a balanced column on record list page when there is child record to figure out is there anyone still not pay money back to you.
 - Category is hardcoded cause to avoid database data disappeared make error like category code c-01 is deleted but record that using c-01 will show error.So if there is no category suitable for you can try other(+) and other(-).
 - Dashboard can clearly see which type of category cost the most or earn the most la.
-- Right click on Record List to show details and delete button.
+- Long click  on Record List to show details and delete button.
+- Delete function will also delete child record.
 
 Database
 - basically database structure is filter by type such as record and user.

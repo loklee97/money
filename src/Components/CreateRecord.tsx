@@ -3,7 +3,6 @@ import { expenseCategoryItem as expensesCategoryItem, expenseCategory } from './
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { createRecord, createRecordapi, getRecord, fetchAllRecordsapi, updateRecordapi, updateRecord, deleteRecordWithChild, getmoneyapi } from '../api/RecordAPI.ts'
 import { useAuth } from '../Components/AuthContext.tsx';
-import LoadingPage from "./Loading.tsx";
 
 export default function Moneyin() {
   const navigate = useNavigate();
@@ -155,8 +154,6 @@ export default function Moneyin() {
           alert("Failed to delete record");
         }
       }
-
-
       navigate(`/createrecord?cal=${cal}`);
     } else {
       setisEdit(isEdit => !isEdit);

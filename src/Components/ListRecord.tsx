@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { deleteRecordWithChild, fetchAllRecordsapi, getmoneyapi, getRecord, getRecordList, recordTree } from '../api/RecordAPI.ts'
 import { expenseCategoryItem, recordListColumn } from '../Components/Enum.ts'
 import { useNavigate } from 'react-router-dom';
-import { parse } from 'date-fns';
 import { useAuth } from '../Components/AuthContext.tsx';
 import { searchFilter, sortByValue, toggleSort } from "./Utils.ts";
 
@@ -133,8 +132,6 @@ export default function TreeList() {
     const newMoney = await getmoneyapi(user!);
     resetMoney(newMoney)
   }
-
-
   return (
     <div>
       <div className="flex items-center gap-2 mb-4">
@@ -226,8 +223,5 @@ export default function TreeList() {
     </div>
 
   );
-}
-function resetMoney(newMoney: number) {
-  throw new Error("Function not implemented.");
 }
 

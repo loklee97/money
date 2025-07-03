@@ -1,4 +1,3 @@
-// utils/sortUtils.ts
 export function toggleSort<T>(
   sortBy: keyof T,
   sortAsc: boolean,
@@ -11,7 +10,6 @@ export function toggleSort<T>(
   }
 }
 
-// utils/filterUtils.ts
 export function searchFilter<T>(
   list: T[],
   search: string,
@@ -28,7 +26,6 @@ export function searchFilter<T>(
   );
 }
 
-// utils/sortCompare.ts
 export function sortByValue<T>(
   a: T,
   b: T,

@@ -46,16 +46,12 @@ const Login = () => {
 
   }
   if (isLoading) return <LoadingPage />
-  // TODO: Handle login logic here (API call, etc)
-
 
   return (
     <>
-
       <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
         <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
           <h2 className="text-2xl font-semibold mb-6 text-center">Login</h2>
-
           {error && (
             <div className="mb-4 text-red-600 text-center font-medium">{error}</div>
           )}
@@ -105,8 +101,5 @@ const Login = () => {
 
   );
 };
-
-
-
 
 export default Login;

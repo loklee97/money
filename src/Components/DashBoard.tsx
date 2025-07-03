@@ -1,14 +1,11 @@
-// components/PieChartCard.tsx
-import  { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
-import { fetchAllRecordsapi, getRecord,  } from '../api/RecordAPI';
+import { fetchAllRecordsapi, getRecord, } from '../api/RecordAPI';
 import { useAuth } from './AuthContext';
 import { expenseCategoryItem, pieData } from './Enum';
 
-
-
 function getRandomColor(): string {
-  return '#' + Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0');
+    return '#' + Math.floor(Math.random() * 0xffffff).toString(16).padStart(6, '0');
 }
 const PieChartCard = () => {
     const { user } = useAuth();
@@ -42,14 +39,10 @@ const PieChartCard = () => {
         };
     });
 
-
     const groupedTotals = recordList.reduce<Record<string, number>>((acc, item) => {
         acc[item.categoryCode] = (acc[item.categoryCode] ?? 0) + item.amount;
-        console.log('geoup :', acc)
-
         return acc;
     }, {});
-
 
     const [isIncome, setIsIncome] = useState<boolean>(true);
     const [filterData, setFilterData] = useState<pieData[]>([]);
@@ -82,7 +75,7 @@ const PieChartCard = () => {
             setHasFiltered(true);
         }
     }, [groupedTotals, expenseCategoryItem, hasFiltered]);//only run on page load for loading data
-    
+
     return (
         <div className="max-w-md mx-auto p-4 bg-white rounded-2xl shadow-lg">
             <div className="flex border-b border-gray-300 mb-4">
@@ -106,9 +99,9 @@ const PieChartCard = () => {
                 </button>
             </div>
             <div className="w-full h-64">
-               {filterData.length ===0 && (
-                <label className="block text-xl font-medium text-gray-700">No Records Found </label>
-               )}
+                {filterData.length === 0 && (
+                    <label className="block text-xl font-medium text-gray-700">No Records Found </label>
+                )}
                 <ResponsiveContainer>
                     <PieChart>
                         <Pie
@@ -117,30 +110,24 @@ const PieChartCard = () => {
                             nameKey="name"
                             outerRadius={80}
                             fill="#8884d8"
-                           label={({ percent }) => `${(percent * 100).toFixed(2)}%`}
-
-                        >
+                            label={({ percent }) => `${(percent * 100).toFixed(2)}%`}>
                             {filterData.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={getRandomColor()} />
                             ))}
                         </Pie>
                         <Tooltip />
                     </PieChart>
-
-        
                 </ResponsiveContainer>
-           
-            </div>
-              {filterData.map((record) => (
 
-                         <div
-                             key={record.categoryCode}
-                           className="grid grid-cols-2 items-start bg-gray-50 hover:bg-gray-200 text-sm font-semibold cursor-pointer border-b transition-colors"
-                         >
-                           <div className="px-4 py-2 border-r">{record.name}</div>
-                           <div className="px-4 py-2 border-r">{record.value * (record.calculation ?? 1)} </div>                   
-                         </div>
-                     ))}
+            </div>
+            {filterData.map((record) => (
+                <div
+                    key={record.categoryCode}
+                    className="grid grid-cols-2 items-start bg-gray-50 hover:bg-gray-200 text-sm font-semibold cursor-pointer border-b transition-colors" >
+                    <div className="px-4 py-2 border-r">{record.name}</div>
+                    <div className="px-4 py-2 border-r">{record.value * (record.calculation ?? 1)} </div>
+                </div>
+            ))}
         </div>
     );
 };

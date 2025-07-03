@@ -28,9 +28,7 @@ const CardGrid: React.FC<{ items: CardItem[] }> = ({ items }) => {
             <img
               src={item.imageUrl}
               alt={item.title}
-              className="mx-auto h-24 w-24 object-contain mb-2"
-            />
-            {/* <h5 className="text-sm font-medium">{item.title}</h5> */}
+              className="mx-auto h-24 w-24 object-contain mb-2" />
           </div>
         </Link>
       ))}
@@ -41,6 +39,5 @@ const CardGrid: React.FC<{ items: CardItem[] }> = ({ items }) => {
 export default function Home() {
   return (
        <CardGrid items={mainmenu} />
- 
   );
 }

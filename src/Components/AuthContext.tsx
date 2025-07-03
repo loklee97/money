@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 
-import { useNavigate, useSearchParams } from "react-router-dom";
 type AuthContextType = {
   user: string | null;
   money: number | 0;
@@ -30,27 +29,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setMoney(money);
     localStorage.setItem('money', money.toString());
   };
- const logout = () => {
-
-     setUser('');//clear cache and user
-
--    setMoney(0);
-
-     localStorage.removeItem('user');
-
--    localStorage.removeItem('money');
-
-   };
-
-
+  const logout = () => {
+    setUser('');//clear cache and user
+    setMoney(0);
+    localStorage.removeItem('user');
+    localStorage.removeItem('money');
+  };
   return (
-    <AuthContext.Provider value={{ user: user, login, logout, money,resetMoney }}>
+    <AuthContext.Provider value={{ user: user, login, logout, money, resetMoney }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// custom hook for convenience
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) throw new Error("useAuth must be used within an AuthProvider");

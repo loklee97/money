@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { expenseCategoryItem, expenseCategory } from '../Components/Enum.ts'
 import { sortByValue, toggleSort } from "./Utils.ts";
@@ -37,13 +36,11 @@ export default function categoryList() {
             </div>
             <div className="overflow-x-auto p-4">
                 <div className="w-full border border-gray-300 rounded overflow-hidden">
-                    {/* Header row */}
                     <div className="grid grid-cols-3 bg-gray-100 text-left text-sm font-medium border-b">
                         <div className="px-4 py-2 border-r" onClick={() => onToggleSort('categoryCode')}>Category Code{sortBy === 'categoryCode' && (sortAsc ? ' ▼' : ' ▲')}</div>
                         <div className="px-4 py-2 border-r" onClick={() => onToggleSort('category')}>  Name  {sortBy === 'category' && (sortAsc ? ' ▼' : ' ▲')}</div>
                         <div className="px-4 py-2 border-r" onClick={() => onToggleSort('calculation')}>Calculation{sortBy === 'calculation' && (sortAsc ? ' ▼' : ' ▲')}</div>
                     </div>
-
                     {
                         sortedData.map((cat) => (
                             <React.Fragment key={cat.categoryCode}>

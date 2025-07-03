@@ -10,9 +10,7 @@ import DashBoard from './Components/DashBoard';
 import AddUser from './Components/AddUser';
 import Header from './Components/Header';
 
-
 function App() {
-
   return (
     <Router>
       <Header  />

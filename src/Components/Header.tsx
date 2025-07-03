@@ -14,7 +14,6 @@ export default function Header({ }) {
         resetMoney(newMoney)
     }
 
-
     return (
         <header className="flex items-center justify-between px-6 py-3 bg-gray-800 text-white shadow-md">
            <div className="flex items-center gap-2  hover:opacity-80 " onClick={() => navigate('/home')}>
@@ -37,8 +36,7 @@ export default function Header({ }) {
                 <span className="text-sm">👤 {user}</span>
                 <button
                     onClick={logout}
-                    className="bg-black-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-                >
+                    className="bg-black-500 hover:bg-red-600 text-white px-3 py-1 rounded">
                     Logout
                 </button>
             </div>

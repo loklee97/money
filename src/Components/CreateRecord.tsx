@@ -121,7 +121,7 @@ export default function Moneyin() {
         };
         try {
           const res = await updateRecordapi(newRecord);
-          console.log('res ::',res)
+          console.log('res ::', res)
           const newMoney = await getmoneyapi(user!);
           resetMoney(newMoney)
           alert("Record update: " + name);
@@ -140,12 +140,13 @@ export default function Moneyin() {
       if (!id || records.length === 0) return;
       const detail = records.find(x => x.id == id)
       const cal = (detail?.calculation === 1 ? 'income' : 'expenses')
+
       if (detail) {
         try {
           const res = await deleteRecordWithChild(detail.id, detail.createdDate, records, user!);
           const newMoney = await getmoneyapi(user!);
           resetMoney(newMoney)
-          console.log('brand new moeny :',money)
+          console.log('brand new moeny :', money)
           resetData();
           alert("Record deleted: " + detail.name);
           navigate(`/createrecord?cal=${cal}`);
@@ -154,7 +155,6 @@ export default function Moneyin() {
           alert("Failed to delete record");
         }
       }
-   
 
 
       navigate(`/createrecord?cal=${cal}`);
@@ -167,7 +167,7 @@ export default function Moneyin() {
 
     <form onSubmit={handleSubmit} className="max-w-xl mx-auto p-4 space-y-4">
       <div>
-        <label className="block text-xl font-medium text-gray-700">{calculation === 'income' ? 'Income (+)' : 'Expenses (-)'}</label>
+     <label className="block text-xl font-medium text-gray-700">{calculation === 'income' ? 'Income (+)' : 'Expenses (-)'}</label>
         <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category:</label>
         <select
           id="categorySelect"

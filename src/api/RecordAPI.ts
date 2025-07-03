@@ -1,12 +1,11 @@
 import axios from "axios";
 import { deleteRecordBody } from "../Components/Enum";
 
-// 设定 baseURL，方便之后统一管理
 
-const live ="https://moneyapi-lj06.onrender.com/api"
+const live ="api"
 const local ="http://localhost:3001/api"
 const api = axios.create({
-    baseURL: live, // 改成你后端实际地址
+    baseURL: live, 
     headers: {
         "Content-Type": "application/json",
     },
@@ -100,11 +99,9 @@ export async function deleteRecordWithChild(id: string, createdDate: string, rec
             id: child.id,
             createdDate: child.createdDate,
             userName : userName,
-           amount : child.amount * child.calculation,
+            amount : child.amount * child.calculation,
         })
     )
-    console.log(data)
-    
     return deleteRecordapi(data);;
     
 }
@@ -149,12 +146,14 @@ export const createRecordapi = async (data: createRecord): Promise<createRecord>
 
 
 export const deleteRecordapi = async (data: deleteRecordBody[]): Promise<{message: string}> => {
-    const res = await api.post("/deleteRecord", data);
+   const res = await api.delete("/deleteRecord", {
+    data: data,
+  });
     return res.data;
 };
 
 export const updateRecordapi = async (data: updateRecord): Promise<{message: string}> => {
-    const res = await api.post("/updateRecord", data);
+    const res = await api.patch("/updateRecord", data);
     return res.data;
 };
 

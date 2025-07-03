@@ -111,7 +111,7 @@ export default function TreeList() {
   const [sortAsc, setSortAsc] = useState(true);
   const [search, setSearch] = useState('');
 
-  const filteredData = searchFilter(recordtree, search, ['name', 'categoryCode'], (item, key, value, search) => {
+  const filteredData = searchFilter(recordtree, search, ['name', 'categoryCode','amount','description','createdDate'], (item, key, value, search) => {
     if (key === 'categoryCode') {
       const category = expenseCategoryItem.find(x => x.categoryCode === value)?.category;
       return category?.toLowerCase().includes(search.toLowerCase()) ?? false;
@@ -178,7 +178,6 @@ export default function TreeList() {
                 </div>
                 <div className="px-4 py-2">
                   {record.children.length > 0 && record.balanced ? record.balanced : ''}
-                  {record.balanced}
                 </div>
               </div>
 

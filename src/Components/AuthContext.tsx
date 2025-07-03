@@ -30,12 +30,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setMoney(money);
     localStorage.setItem('money', money.toString());
   };
-  const logout = () => {
-    setUser('');//clear cache and user
-    setMoney(0);
-    localStorage.removeItem('user');
-    localStorage.removeItem('money');
-  };
+ const logout = () => {
+
+     setUser('');//clear cache and user
+
+-    setMoney(0);
+
+     localStorage.removeItem('user');
+
+-    localStorage.removeItem('money');
+
+   };
+
 
   return (
     <AuthContext.Provider value={{ user: user, login, logout, money,resetMoney }}>
